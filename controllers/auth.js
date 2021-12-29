@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs/dist/bcrypt');
 const express = require('express');
 const Usuario = require('../models/Usuario');
 
@@ -20,6 +21,9 @@ const crearUsuario = async (req, res = express.response) => {
         }
 
         usuario = new Usuario(req.body);
+
+        const salt = bcrypt.genSaltSync();
+        usuario.password = bcrypt.hashSync(password, salt);
 
         await usuario.save();
 
@@ -44,28 +48,53 @@ const crearUsuario = async (req, res = express.response) => {
 
 };
 
-const loginUsuario = (req, res = express.response) => {
+const loginUsuario = async (req, res = express.response) => {
 
     const { email, password } = req.body;
 
-    //TIP: se reemplaza por el middleware de validacion
-    // //errores
-    // const errores = validationResult(req);
+    try {
 
-    // if (!errores.isEmpty()) {
-    //     return res.status(400).json({
-    //         ok: false,
-    //         errors: errores.mapped()
-    //     })
-    // }
+        let usuario = await Usuario.findOne({ email });
 
-    res.json(
-        {
-            "ok": true,
-            email,
-            password
+        if (!usuario) {
+            return res.status(400).json(
+                {
+                    "ok": false,
+                    "msg": "Usuario ya existe"
+                }
+            );
         }
-    );
+
+        const validarUsuario = bcrypt.compareSync(password, usuario.password);
+
+        if (!validarUsuario) {
+            return res.status(400).json(
+                {
+                    "ok": false,
+                    "msg": "Usuario o contraseña invalida"
+                }
+            );
+        }
+
+        res.status(200).json(
+            {
+                "ok": true,
+                "msg": "Usuario logeado exitosamente",
+                "uid": usuario._id,
+                "name": usuario.name
+            }
+        );
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(
+            {
+                "ok": false,
+                "msg": "Error al logear usuario comuniquese con el admin"
+            }
+        );
+    }
+
 }
 
 const renovarToken = (req,res = express.response) => {
