@@ -1,10 +1,12 @@
 const express = require('express');
+const { dbConnection } = require('./database/config');
 require('dotenv').config();
-
-console.log(process.env);
 
 //INFO: crear servidor express
 const app = express();
+
+//INFO: conectamos a la base de mongo
+dbConnection();
 
 //INFO: directiorio publico
 // use vendria a ser un middleware para cada consulta
