@@ -1,12 +1,16 @@
 const express = require('express');
 const { dbConnection } = require('./database/config');
 require('dotenv').config();
+const cors = require('cors');
 
 //INFO: crear servidor express
 const app = express();
 
 //INFO: conectamos a la base de mongo
 dbConnection();
+
+//INFO: cors connection
+app.use(cors());
 
 //INFO: directiorio publico
 // use vendria a ser un middleware para cada consulta
@@ -17,14 +21,6 @@ app.use(express.json());
 
 //INFO: rutas
 app.use('/api/auth', require('./routes/auth'));
-// app.get('/', (req,res) => {
-//     console.log('se requiere el /');
-
-//     //INFO: forma de devolver ante esta ruta
-//     res.json({
-//         "ok": true
-//     });
-// });
 
 //INFO: escuchar peticiones
 app.listen(process.env.PORT , () => {
