@@ -4,23 +4,29 @@ const { Schema, model } = mongoose;
 const eventsSchema = new Schema({
     title: {
         String,
-        require: true
     },
     notes: {
         String
     },
     start: {
         type: Date,
-        require: true
+        required: true
     },
     end: {
         type: Date,
-        require: true
+        required: true
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'Usuario'
+        ref: 'Usuario',
+        required: true
     }
 });
+
+eventsSchema.method('toJSON', function () {
+    const { __v, _id, ...rest } = this.toObject();
+    rest.id = _id;
+    return rest;
+})
 
 module.exports = model('Events', eventsSchema);
