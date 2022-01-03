@@ -34,14 +34,14 @@ const updateEvent = async (req, res = express.response) => {
         const evento = await Events.findById(eventId);
 
         if (!evento) {
-            return res.status(404).json({
+            res.status(404).json({
                 "ok": false,
                 "msg": "No existe el evento a actualizar"
             });
         }
 
         if (evento.user.toString() !== uid) {
-            return res.status(401).json({
+            res.status(401).json({
                 "ok": false,
                 "msg": "No tiene acceso suficiente"
             });
@@ -51,7 +51,7 @@ const updateEvent = async (req, res = express.response) => {
 
         const eventoActualizado = await Events.findByIdAndUpdate(eventId, eventoNuevo, { new: true });
 
-        return res.json({
+        res.json({
             "ok": true,
             "msg": "Elemento actualizado 2",
             eventoActualizado
@@ -63,25 +63,49 @@ const updateEvent = async (req, res = express.response) => {
             "msg": "Error al actualizar"
         });
     }
-
-    res.json({
-        "ok": true,
-        "msg": 'Evento actualizado'
-    });
 }
 
-const deleteEvent = (req, res = express.response) => {
+const deleteEvent = async (req, res = express.response) => {
 
-    res.json({
-        "ok": true,
-        "msg": 'Evento eliminado'
-    });
+    const eventId = req.params.id;
+    const uid = req.uid;
+    try {
+        const evento = await Events.findById(eventId);
+
+        if (!evento) {
+            return res.status(404).json({
+                "ok": false,
+                "msg": "No existe el evento a eliminar o ha sido eliminado"
+            });
+        }
+
+        if (evento.user.toString() !== uid) {
+            return res.status(401).json({
+                "ok": false,
+                "msg": "No tiene acceso suficiente"
+            });
+        }
+
+        const eventoEliminado = await Events.findByIdAndDelete(eventId);
+
+        return res.json({
+            "ok": true,
+            "msg": "Elemento eliminado",
+            eventoEliminado
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            "ok": false,
+            "msg": "Error al actualizar"
+        });
+    }
 }
 
 const getEvents = async (req, res = express.response) => {
 
     try {
-        const eventsAll = await Events.find().populate('user');
+        const eventsAll = await Events.find().populate('user', 'name _id');
 
         return res.json({
             "ok": true,
