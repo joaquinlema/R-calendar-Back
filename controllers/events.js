@@ -2,6 +2,8 @@ const express = require('express');
 
 const createEvent = (req, res = express.response) => {
 
+    console.log(req.body);
+
     res.json({
         "ok": true,
         "msg": 'Evento creado'
