@@ -21,6 +21,7 @@ app.use(express.json());
 
 //INFO: rutas
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/events', require('./routes/events'));
 
 //INFO: escuchar peticiones
 app.listen(process.env.PORT , () => {

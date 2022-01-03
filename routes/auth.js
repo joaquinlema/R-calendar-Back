@@ -6,7 +6,7 @@ corresponde a ./api/auth
 const express = require('express');
 const { check } = require('express-validator');
 const { crearUsuario, loginUsuario, renovarToken } = require('../controllers/auth');
-const { renovarJWT } = require('../middlewares/renovarJWT');
+const { validarJWT } = require('../middlewares/validarJWT');
 const { validarCampos } = require('../middlewares/validarCampos');
 const router = express.Router();
 // router.post('/auth', loginUsuario);
@@ -26,7 +26,7 @@ router.post('/new', [
 ], crearUsuario);
 
 router.get('/renew', [
-    renovarJWT
+    validarJWT
 ], renovarToken);
 
 module.exports = router;
