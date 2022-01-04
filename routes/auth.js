@@ -12,7 +12,7 @@ const router = express.Router();
 // router.post('/auth', loginUsuario);
 
 //INFO: puedo pasar el middleware para validar por jeempo entre []
-router.get('/', [
+router.post('/', [
     check('email', 'El email es obligatorio').isEmail(),
     check('password', 'El password es obligatorio').isLength({ min: 6 }),
     validarCampos
