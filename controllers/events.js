@@ -88,7 +88,7 @@ const deleteEvent = async (req, res = express.response) => {
 
         const eventoEliminado = await Events.findByIdAndDelete(eventId);
 
-        return res.json({
+        res.json({
             "ok": true,
             "msg": "Elemento eliminado",
             eventoEliminado
