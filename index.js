@@ -6,11 +6,11 @@ const cors = require('cors');
 //INFO: crear servidor express
 const app = express();
 
-//INFO: conectamos a la base de mongo
-dbConnection();
-
 //INFO: cors connection
 app.use(cors());
+
+//INFO: conectamos a la base de mongo
+dbConnection();
 
 //INFO: directiorio publico
 // use vendria a ser un middleware para cada consulta
