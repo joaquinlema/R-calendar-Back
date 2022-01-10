@@ -3,10 +3,10 @@ const { Schema, model } = mongoose;
 
 const eventsSchema = new Schema({
     title: {
-        String,
+        type: String,
     },
     notes: {
-        String
+        type: String
     },
     start: {
         type: Date,
@@ -24,8 +24,13 @@ const eventsSchema = new Schema({
 });
 
 eventsSchema.method('toJSON', function () {
-    const { __v, _id, ...rest } = this.toObject();
-    rest.id = _id;
+    const { __v: version, _id: idEvent, ...rest } = this.toObject();
+    rest.id = idEvent;
+
+    const { __v: versionUser, _id: idUser, password, email, ...other } = rest.user;
+    rest.user = other;
+    rest.user.id = idUser;
+
     return rest;
 })
 

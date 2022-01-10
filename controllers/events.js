@@ -9,7 +9,8 @@ const createEvent = async (req, res = express.response) => {
 
         eventNew.user = req.uid;
 
-        const eventSave = await eventNew.save();
+        let eventSave = await eventNew.save();
+        eventSave = await Events.populate(eventSave, { path: "user" });
 
         res.json({
             "ok": true,
@@ -20,7 +21,7 @@ const createEvent = async (req, res = express.response) => {
     } catch (error) {
         res.status(500).json({
             "ok": false,
-            "msg": 'Error al crear'
+            "msg": `Error al crear ${error}`
         });
     }
 

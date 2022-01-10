@@ -21,8 +21,8 @@ router.post('/',
     check('title', 'El campo title es obligatorio').notEmpty(),
     check('start', 'El campo start debe ser fecha').custom(isDate),
     check('end', 'El campo end debe ser fecha').custom(isDate),
-    validarCampos
-    , createEvent);
+    validarCampos,
+    createEvent);
 
 router.put('/:id',
     check('title', 'El campo title es obligatorio').notEmpty(),
